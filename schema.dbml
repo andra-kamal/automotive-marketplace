@@ -1,0 +1,40 @@
+Table categories {
+  id integer [primary key, increment]
+  parent_id integer [ref: > categories.id]
+  name varchar
+  slug varchar [unique]
+  created_at timestamp
+}
+
+Table category_filters {
+  id integer [primary key, increment]
+  category_id integer [ref: > categories.id]
+  filter_key varchar
+  filter_type varchar // enum, range, boolean
+  options json
+}
+
+Table listings {
+  id integer [primary key, increment]
+  category_id integer [ref: > categories.id]
+  make varchar
+  model varchar
+  year integer
+  mileage integer
+  price decimal
+  condition varchar
+  transmission varchar
+  fuel_type varchar
+  color varchar
+  images json
+  location varchar
+  status varchar
+  dynamic_attributes json
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+}
+
+// Indexes
+// FULLTEXT on (make, model, location) in listings
+// B-TREE on category_id, price, year, status in listings
