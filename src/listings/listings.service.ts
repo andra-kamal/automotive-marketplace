@@ -14,13 +14,15 @@ export class ListingsService {
       ? JSON.stringify(createListingDto.dynamic_attributes) 
       : null;
 
+    const insertData: any = {
+      ...createListingDto,
+      images: imagesJson,
+      dynamic_attributes: dynamicAttrJson,
+    };
+
     const result = await this.dbService.db
       .insertInto('listings')
-      .values({
-        ...createListingDto,
-        images: imagesJson,
-        dynamic_attributes: dynamicAttrJson,
-      })
+      .values(insertData)
       .executeTakeFirstOrThrow();
 
     return { id: Number(result.insertId), ...createListingDto };
@@ -180,7 +182,7 @@ export class ListingsService {
 
     // Full-Text Search in MySQL using MATCH() AGAINST()
     if (queryParam.q) {
-      query = query.where(sql`MATCH(make, model, location) AGAINST(${queryParam.q} IN BOOLEAN MODE)`);
+      query = query.where(sql`MATCH(make, model, location) AGAINST(${queryParam.q} IN BOOLEAN MODE)`, '>', 0);
     }
 
     // Apply the same filters as findAll
