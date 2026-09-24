@@ -83,4 +83,4 @@ You can find all the request and response examples there.
 
 The application includes a `Dockerfile` optimized for production and can be deployed directly to services like Railway, Render, or Fly.io.
 
-**Live Base URL:** `[GANTI_DENGAN_URL_RAILWAY_ANDA]` (e.g. `https://your-app.up.railway.app`)
+**Live Base URL:** `automotive-marketplace-production.up.railway.app`
