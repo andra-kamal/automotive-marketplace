@@ -9,11 +9,11 @@ async function migrateToLatest() {
   const db = new Kysely<any>({
     dialect: new MysqlDialect({
       pool: createPool({
-        host: process.env.DB_HOST || '127.0.0.1',
-        user: process.env.DB_USER || 'user',
-        password: process.env.DB_PASSWORD || 'password',
-        database: process.env.DB_NAME || 'automotive_marketplace',
-        port: Number(process.env.DB_PORT) || 3306,
+        host: process.env.MYSQLHOST || process.env.DB_HOST || '127.0.0.1',
+        user: process.env.MYSQLUSER || process.env.DB_USER || 'user',
+        password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || 'password',
+        database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'automotive_marketplace',
+        port: Number(process.env.MYSQLPORT || process.env.DB_PORT) || 3306,
         connectionLimit: 1,
       }),
     }),

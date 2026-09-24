@@ -11,11 +11,11 @@ export class DatabaseService implements OnModuleInit, OnModuleDestroy {
   constructor(@Inject(ConfigService) private configService: ConfigService) {
     const dialect = new MysqlDialect({
       pool: createPool({
-        host: this.configService.get<string>('DB_HOST', '127.0.0.1'),
-        user: this.configService.get<string>('DB_USER', 'user'),
-        password: this.configService.get<string>('DB_PASSWORD', 'password'),
-        database: this.configService.get<string>('DB_NAME', 'automotive_marketplace'),
-        port: this.configService.get<number>('DB_PORT', 3306),
+        host: this.configService.get<string>('MYSQLHOST') || this.configService.get<string>('DB_HOST', '127.0.0.1'),
+        user: this.configService.get<string>('MYSQLUSER') || this.configService.get<string>('DB_USER', 'user'),
+        password: this.configService.get<string>('MYSQLPASSWORD') || this.configService.get<string>('DB_PASSWORD', 'password'),
+        database: this.configService.get<string>('MYSQLDATABASE') || this.configService.get<string>('DB_NAME', 'automotive_marketplace'),
+        port: Number(this.configService.get<string>('MYSQLPORT')) || this.configService.get<number>('DB_PORT', 3306),
         connectionLimit: 10,
       }),
     });
