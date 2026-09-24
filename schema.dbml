@@ -1,40 +1,52 @@
+// Copy and paste this code into https://dbdiagram.io/d to generate the ERD
+
 Table categories {
   id integer [primary key, increment]
   parent_id integer [ref: > categories.id]
-  name varchar
-  slug varchar [unique]
-  created_at timestamp
+  name varchar(255) [not null]
+  slug varchar(255) [not null, unique]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  Note: 'Adjacency list strategy. Efficient arbitrary depth querying using MySQL 8.0 Recursive CTEs.'
 }
 
 Table category_filters {
   id integer [primary key, increment]
-  category_id integer [ref: > categories.id]
-  filter_key varchar
-  filter_type varchar // enum, range, boolean
-  options json
+  category_id integer [not null, ref: > categories.id]
+  filter_key varchar(255) [not null]
+  filter_type varchar(50) [not null, note: 'enum, range, boolean']
+  options json 
+  
+  Note: 'Registry of available dynamic filters for each category.'
 }
 
 Table listings {
   id integer [primary key, increment]
-  category_id integer [ref: > categories.id]
-  make varchar
-  model varchar
-  year integer
-  mileage integer
-  price decimal
-  condition varchar
-  transmission varchar
-  fuel_type varchar
-  color varchar
-  images json
-  location varchar
-  status varchar
-  dynamic_attributes json
-  created_at timestamp
-  updated_at timestamp
+  category_id integer [not null, ref: > categories.id]
+  make varchar(255) [not null]
+  model varchar(255) [not null]
+  year integer [not null]
+  mileage integer [not null]
+  price decimal(15,2) [not null]
+  condition varchar(50) [not null]
+  transmission varchar(100)
+  fuel_type varchar(100)
+  color varchar(100) [not null]
+  images json [not null]
+  location varchar(255) [not null]
+  status varchar(50) [not null, default: 'available']
+  dynamic_attributes json [note: 'Stores category-specific attributes like doors, engine_type']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
   deleted_at timestamp
+  
+  indexes {
+    (make, model, location) [name: 'ft_make_model_location', type: fulltext]
+    category_id [name: 'idx_listings_category_id', type: btree]
+    price [name: 'idx_listings_price', type: btree]
+    year [name: 'idx_listings_year', type: btree]
+    status [name: 'idx_listings_status', type: btree]
+  }
+  
+  Note: 'FULLTEXT index on make, model, location for fast fuzzy text searching. B-Tree indexes on price, year, status, and category_id for faceted filtering.'
 }
-
-// Indexes
-// FULLTEXT on (make, model, location) in listings
-// B-TREE on category_id, price, year, status in listings
