@@ -1,9 +1,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-COPY package.json yarn.lock .yarnrc.yml ./
-COPY .yarn .yarn
-RUN yarn install --immutable
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
 COPY . .
 RUN yarn build
